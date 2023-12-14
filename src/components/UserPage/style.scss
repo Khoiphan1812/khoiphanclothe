@@ -1,0 +1,245 @@
+.user-profile-container {
+  display: flex;
+  font-family: "Arial", sans-serif;
+  background: #f4f4f4;
+  min-height: 100vh;
+  padding: 20px;
+
+  aside.sidebar {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    width: 250px; // Adjust the width as per your design requirement
+    margin-right: 20px;
+
+    .user-avatar {
+      background-color: #ebf4ff;
+      border-radius: 50%;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      height: 80px;
+      width: 80px;
+      margin-bottom: 10px;
+      // Use an actual image or icon here
+    }
+
+    .user-details-sidebar {
+      margin-bottom: 20px;
+      .user-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+      }
+    }
+
+    nav.user-actions {
+      ul {
+        list-style: none;
+        padding: 0;
+
+        li {
+          padding: 10px 0;
+          cursor: pointer;
+
+          &:hover {
+            color: #4caf50; // Or another highlight color
+          }
+        }
+      }
+    }
+  }
+
+  main.user-content {
+    background: #fff;
+    flex-grow: 1;
+    border-radius: 8px;
+    padding: 20px;
+
+    h2 {
+      border-bottom: 1px solid #eaeaea;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    form {
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+
+        label {
+          margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="date"] {
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          padding: 8px;
+          font-size: 16px;
+
+          &:focus {
+            border-color: #4caf50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+            outline: none;
+          }
+        }
+      }
+
+      .radio-group {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 15px;
+
+        label {
+          display: flex;
+          align-items: center;
+
+          input {
+            margin-right: 5px;
+          }
+        }
+      }
+
+      .save-changes-btn {
+        background-color: #4caf50; // Green background for the button
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: darken(#4caf50, 10%);
+        }
+      }
+    }
+  }
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; // Thay đổi từ center sang flex-start
+    padding-top: 10vh; // Thêm padding trên cùng để đảm bảo modal không bị mất phần trên
+    z-index: 1000;
+  }
+
+  .modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 540px; // Chiều rộng tối đa của modal
+    max-height: 80vh; // Chiều cao tối đa của modal
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10vh; // Thêm margin dưới cùng để đảm bảo modal không bị mất phần dưới
+    overflow-y: auto; // Cho phép cuộn bên trong nếu nội dung quá cao
+    position: relative;
+    display: flex;
+    flex-direction: column; // Đặt flex-direction là column để items bên trong sắp xếp theo chiều dọc
+
+    .modal-header {
+      position: relative; // Đặt để định vị tuyệt đối nút đóng so với header
+
+      h2 {
+        // Styles cho tiêu đề của modal
+        font-size: 1.5rem;
+        color: #333;
+        margin: 0;
+      }
+
+      .modal-close-btn {
+        position: absolute;
+        top: 5px; // Khoảng cách từ đỉnh modal
+        right: 5px; // Khoảng cách từ cạnh phải modal
+        font-size: 1.5rem;
+        line-height: 1;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: #333;
+
+        &:hover {
+          color: #cb2431;
+        }
+      }
+    }
+  }
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+input[type="text"],
+input[type="tel"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+
+  &::placeholder {
+    color: #999;
+  }
+
+  &:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+}
+
+.address-type {
+  margin-bottom: 15px;
+
+  label {
+    margin-right: 15px;
+
+    input[type="radio"] {
+      margin-right: 5px;
+    }
+  }
+}
+
+.default-address-checkbox {
+  margin-bottom: 20px;
+
+  label {
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+  }
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: darken(#d9534f, 10%);
+  }
+}

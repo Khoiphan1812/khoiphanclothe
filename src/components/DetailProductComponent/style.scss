@@ -1,0 +1,147 @@
+.product-detail {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between; // to spread out the main sections
+
+  padding: 30px;
+  max-width: 1400px;
+  margin: auto;
+
+  .product-image {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 0 50px; // Increase the right padding to push the image a bit to the right
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  .product-info {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+
+    .product-title {
+      font-size: 24px;
+      margin: 10px 0;
+    }
+
+    .product-price {
+      font-size: 20px;
+      color: #333;
+      margin: 10px 0;
+    }
+
+    .product-description {
+      font-size: 14px;
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    .product-colors {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+
+      h4 {
+        font-size: 16px;
+        margin-right: 20px; // Add some space between the title and the color options
+        color: #333;
+      }
+
+      .color-option {
+        width: 24px; // Match the size in the image
+        height: 24px; // Match the size in the image
+        border: 2px solid #d9d9d9; // Visible border color as in the image
+        box-shadow: none; // No shadow unless active
+        cursor: pointer;
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: scale(1.1); // Slightly enlarge on hover
+        }
+
+        &.selected {
+          box-shadow: 0 0 0 2px #fbb03b; // Highlight the selected color option with a border
+          transform: scale(1); // Keep the size the same for selected
+        }
+      }
+    }
+    .product-sizes,
+    .product-quantity {
+      h4 {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #333; // assuming a title for the size selection
+      }
+
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px; // assuming buttons are closer together
+
+      button {
+        background-color: #fff; // assuming unselected buttons have a white background
+        color: #333; // assuming unselected buttons have darker text
+        border: 1px solid #d9d9d9; // a light border for buttons
+
+        &.selected {
+          background-color: #fbb03b; // selected size has a distinct background color
+          color: #fff; // selected size has white text
+          border: none; // no border for selected size
+        }
+      }
+    }
+
+    .size-selector,
+    .quantity-selector {
+      width: 10%;
+    }
+
+    .product-actions {
+      display: flex;
+      justify-content: center; // Center buttons horizontally
+      align-items: center; // Center buttons vertically (if needed)
+      margin-top: 1rem;
+      gap: 10px; // Adds space between buttons
+
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 20px; // Adjust padding as needed
+        text-align: center;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .add-to-cart-btn {
+        background-color: #f0f0f0;
+        border: 1px solid #d9d9d9;
+
+        &:hover {
+          background-color: #e6e6e6;
+          border-color: #c0c0c0;
+        }
+      }
+
+      .buy-now-btn {
+        background-color: #fbb03b;
+        border: 1px solid #fbb03b;
+        color: white;
+
+        &:hover {
+          background-color: darken(#fbb03b, 10%);
+          border-color: darken(#fbb03b, 10%);
+        }
+      }
+    }
+  }
+}

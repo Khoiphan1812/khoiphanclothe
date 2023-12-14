@@ -1,0 +1,115 @@
+.footer {
+  background-color: #f8f8ff;
+  color: black;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
+  .custom-link {
+    text-decoration: none; // Loại bỏ gạch chân mặc định
+    color: black; // Màu văn bản cho liên kết
+
+    &:hover {
+      // Khi di chuột qua liên kết
+      text-decoration: underline; // Gạch chân khi di chuột qua
+      color: #fbb03b; // Màu văn bản thay đổi khi di chuột qua
+    }
+  }
+
+  .footer-section {
+    margin-bottom: 20px;
+    color: black;
+
+    h3 {
+      border-bottom: 1px solid #fbb03b;
+      color: #fbb03b;
+      padding-bottom: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        padding: 5px 0;
+      }
+    }
+
+    .social-links {
+      display: flex;
+      align-items: center;
+
+      svg {
+        margin-right: 10px;
+        font-size: 24px;
+        color: #fbb03b;
+
+        &:hover {
+          color: black;
+        }
+      }
+    }
+  }
+
+  .footer-info {
+    border-top: 1px solid #444;
+    padding-top: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+
+    .line {
+      padding-top: 10px;
+      color: red;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .footer-certification {
+    margin-top: 20px;
+    text-align: center;
+
+    img {
+      max-width: 100px; // Adjust as needed
+    }
+  }
+}
+
+// Responsive adjustments
+@media (min-width: 768px) {
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .footer-section {
+      flex: 1;
+      min-width: 200px;
+      margin-right: 20px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    .footer-info {
+      flex-basis: 100%;
+      order: 99; // Ensure this is always at the bottom
+    }
+  }
+}
+
+// Additional global styles, if necessary
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+}
+
+a {
+  color: #61dafb;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

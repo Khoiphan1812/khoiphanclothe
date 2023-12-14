@@ -1,0 +1,252 @@
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+
+  .ant-menu-item {
+    font-size: 20px; // Tăng kích thước văn bản
+    padding: 0 20px; // Thay đổi padding để mục menu lớn hơn
+
+    // Tăng kích thước của biểu tượng
+    .anticon {
+      font-size: 20px; // Tăng kích thước của biểu tượng
+    }
+  }
+
+  // Đối với mục Outlet Sale có màu đỏ
+  .ant-menu-item[role="menuitem"] {
+    &.ant-menu-item-selected {
+      color: red; // Giữ màu đỏ khi mục này được chọn
+    }
+  }
+}
+
+.ant-menu-light.ant-menu-horizontal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f8ff; // Changed to white background
+  padding: 5px 0px;
+  .ant-menu-item {
+    color: #000;
+    font-size: 18px;
+
+    &:hover {
+      color: #808080; // Dark grey for hover state
+    }
+
+    &.ant-menu-item-selected {
+      background-color: transparent;
+      color: #000; // Ensure selected item is also black
+    }
+  }
+
+  .ant-menu-item-key-logo {
+    padding: 0;
+    flex-grow: 0;
+    img {
+      display: block;
+      height: 64px;
+    }
+  }
+
+  .ant-menu-item-key-new-arrivals,
+  .ant-menu-item-key-outlet-sale {
+    position: relative;
+
+    &::after {
+      content: "Hot";
+      position: absolute;
+      top: -10px;
+      right: -20px;
+      background-color: #fbb03b;
+      color: white;
+      font-size: 12px;
+      padding: 2px 5px;
+      border-radius: 5px;
+    }
+  }
+
+  .ant-menu-item-icon {
+    margin-right: 0;
+  }
+}
+
+/* Variables for colors used in the form */
+:root {
+  --bg-light: #efefef;
+  --bg-dark: #707070;
+  --clr: #fbb03b;
+  --clr-alpha: #9c9c9c60;
+}
+
+/* General form styling */
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 40px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 320px;
+  margin: auto;
+}
+
+/* Input fields styling */
+.form .input-span {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form input[type="text"],
+.form input[type="password"] {
+  border-radius: 4px; /* Less rounded edges for a modern look */
+  padding: 12px 15px; /* Comfortable padding */
+  width: 100%;
+  border: 1px solid #d9d9d9; /* Subtle border */
+  background-color: var(--clr-alpha);
+}
+
+.form input[type="text"]:focus,
+.form input[type="password"]:focus {
+  border-color: var(--clr); /* Highlight color when focused */
+}
+
+/* Label styling */
+.label {
+  align-self: flex-start;
+  color: var(--clr);
+  font-weight: 600;
+}
+
+/* Submit button styling */
+.form .submit {
+  padding: 10px 0; // Điều chỉnh padding để phù hợp với kích thước trong thiết kế
+  width: 100%; // Nút chiếm toàn bộ chiều rộng của form
+  border-radius: 4px; // Điều chỉnh để có các góc bo tròn
+  background-color: #707070; // Màu nền đỏ cho nút
+  color: white; // Màu chữ trắng
+  border: none; // Không viền
+  cursor: pointer; // Con trỏ chuột hiển thị dấu pointer khi di chuyển qua nút
+  transition: background-color 300ms ease-in-out; // Hiệu ứng chuyển màu nền mượt mà
+  font-weight: bold; // Chữ đậm
+  font-size: 16px; // Điều chỉnh kích thước font
+  margin-top: 24px; // Khoảng cách phía trên nút
+
+  &:hover {
+    background-color: darken(#fbb03b, 5%); // Màu nền tối hơn khi hover
+  }
+
+  &:active {
+    background-color: darken(#fbb03b, 10%); // Màu nền tối hơn nữa khi nhấn
+  }
+}
+
+/* Link styling */
+.span {
+  text-decoration: none;
+  color: var(--bg-dark);
+}
+
+.span a {
+  color: var(--clr);
+}
+
+/* Modal general styles */
+.ant-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif; // Set the font, if needed
+  .ant-modal-footer {
+    display: flex;
+    justify-content: center; // Căn giữa nút trong footer
+    padding: 16px;
+
+    button {
+      margin: 0 8px; // Khoảng cách giữa các nút
+    }
+  }
+}
+
+/* Modal content styles */
+.ant-modal-content {
+  border-radius: 5px; // Slightly rounded corners
+  .ant-modal-header {
+    padding: 16px;
+    background-color: #fff; // White background for the header
+    border-bottom: none;
+    .ant-modal-title {
+      text-align: center;
+      margin: 0;
+      font-size: 20px; // Larger font size for the title
+    }
+  }
+  .ant-modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; // Center align the items
+    gap: 10px; // Spacing between items
+    .input-code {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); // Creates a 4-column grid
+      gap: 10px; // Spacing between grid items
+      input {
+        text-align: center;
+        font-size: 20px; // Larger text for easier reading
+        border: 1px solid #d9d9d9; // Subtle border
+        border-radius: 4px; // Matching the rounded corners
+        padding: 10px;
+        width: 50px; // Set a fixed width for square appearance
+        height: 50px; // Set a fixed height for square appearance
+        &:focus {
+          border-color: #ff4d4f; // Red border for focus state
+          outline: none; // Remove default focus outline
+        }
+      }
+    }
+    .resend-timer {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #707070; // Darker text for the timer
+    }
+  }
+  .ant-modal-footer {
+    display: none; // Remove footer as it's not visible in the design
+  }
+}
+
+.otp-input-modal {
+  // Thêm kiểu cho input nhập mã xác thực nếu cần
+  input[type="text"].otp-input {
+    // Kiểu cho input mã OTP
+    font-size: 20px;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 20px; // Thêm khoảng cách dưới input nếu cần
+  }
+}
+
+/* Button styles */
+.submit-button {
+  width: 100%; // Full width button
+  background-color: #ff4d4f; // Red background
+  border: none;
+  color: white;
+  padding: 12px 0; // Adequate padding for touch targets
+  font-size: 18px; // Larger font size for readability
+  border-radius: 4px; // Rounded corners to match input fields
+  cursor: pointer;
+  &:hover {
+    background-color: darken(#ff4d4f, 10%); // Slightly darker on hover
+  }
+}
+
+/* You can remove all other styles that are not related to the modal */

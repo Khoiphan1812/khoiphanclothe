@@ -1,0 +1,136 @@
+.carousel {
+  .slick-slide {
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    img {
+      height: 100%;
+      width: 100%;
+      line-height: 160px;
+    }
+  }
+
+  // You may want to style the dots (if any) at the bottom of the carousel.
+  .slick-dots li button:before {
+    color: white;
+  }
+
+  .slick-dots li.slick-active button:before {
+    color: #fbb03b;
+  }
+}
+
+.product-section {
+  justify-content: center;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 15px;
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #333;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem 0;
+    transition: all 0.3s ease;
+  }
+
+  .product-price {
+    color: #333;
+    font-size: 1rem;
+    margin: 1rem 0;
+  }
+
+  .product-actions {
+    display: flex;
+    justify-content: center; // Center buttons horizontally
+    align-items: center; // Center buttons vertically (if needed)
+    margin-top: 1rem;
+    gap: 10px; // Adds space between buttons
+
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 20px; // Adjust padding as needed
+      text-align: center;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-to-cart-btn {
+      background-color: #f0f0f0;
+      border: 1px solid #d9d9d9;
+
+      &:hover {
+        background-color: #e6e6e6;
+        border-color: #c0c0c0;
+      }
+    }
+
+    .buy-now-btn {
+      background-color: #fbb03b;
+      border: 1px solid #fbb03b;
+      color: white;
+
+      &:hover {
+        background-color: darken(#fbb03b, 10%);
+        border-color: darken(#fbb03b, 10%);
+      }
+    }
+  }
+
+  .ant-card {
+    margin-bottom: 2rem;
+
+    .ant-card-cover img {
+      width: 100%;
+      height: 450px;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+}
+
+.banner {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.banner-item {
+  position: relative; // Needed to position the text over the image
+  text-align: center; // Center the text horizontally
+  background-size: cover;
+  background-position: center;
+  height: 500px; // Hoặc bạn có thể điều chỉnh chiều cao tùy ý
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white; // Text color
+
+  h2,
+  p {
+    position: relative; // Bring the text above the ::before pseudo-element
+    z-index: 2; // Ensures the text is above the background image
+    color: white; // Text color
+    font-size: 50px;
+  }
+}
+
+// Điều chỉnh Row gutter để có không gian giữa các banner
+.Row {
+  margin-left: -15px; // Điều chỉnh theo nhu cầu
+  margin-right: -15px; // Điều chỉnh theo nhu cầu
+
+  .Col {
+    padding-left: 15px; // Điều chỉnh theo nhu cầu
+    padding-right: 15px; // Điều chỉnh theo nhu cầu
+  }
+}
