@@ -31,15 +31,36 @@
     }
 
     .product-price {
-      font-size: 20px;
-      color: #333;
-      margin: 10px 0;
+      color: black; // Màu chữ cho "Giá bán: "
+      font-size: 18px; // Kích thước font
+      font-weight: bold; // Độ đậm của chữ
+      margin: 10px 0; // Khoảng cách trên và dưới
+
+      .price-value {
+        color: red; // Màu chữ cho giá tiền
+        font-weight: normal; // Độ đậm chữ cho giá tiền
+      }
     }
 
-    .product-description {
-      font-size: 14px;
-      margin-bottom: 20px;
-      color: #666;
+    .product-images-colors {
+      display: flex; // Sắp xếp ảnh theo hàng ngang
+      align-items: center; // Căn giữa các ảnh theo chiều dọc
+      gap: 10px; // Khoảng cách giữa các ảnh
+
+      img {
+        width: 50px; // Đặt chiều rộng cho ảnh
+        height: auto; // Đặt chiều cao tự động để giữ tỷ lệ ảnh
+        cursor: pointer; // Hiển thị con trỏ chuột khi di chuyển qua ảnh
+        border: 2px solid transparent; // Viền trong suốt để không thay đổi kích thước ảnh khi không được chọn
+
+        &.selected {
+          border-color: #fbb03b; // Viền màu đỏ cho ảnh được chọn
+        }
+
+        &:hover {
+          opacity: 0.7; // Làm mờ ảnh một chút khi hover
+        }
+      }
     }
 
     .product-colors {
@@ -142,6 +163,100 @@
           border-color: darken(#fbb03b, 10%);
         }
       }
+    }
+  }
+  @media (max-width: 1200px) {
+    flex-direction: column; // Chuyển sang chế độ cột
+
+    .product-image,
+    .product-info {
+      flex: 1 1 100%; // Chiếm toàn bộ chiều rộng
+      padding: 0 15px; // Giảm padding
+    }
+
+    .product-image {
+      img {
+        max-width: 100%; // Đảm bảo ảnh không vượt quá khung
+      }
+    }
+  }
+}
+
+.related-products {
+  padding: 30px;
+  max-width: 1400px;
+  margin: auto;
+
+  .slick-slide {
+    text-align: center;
+  }
+
+  .related-product-item {
+    position: relative;
+
+    img {
+      max-width: 100%;
+      margin-bottom: 10px; // Space between image and text
+    }
+
+    .product-info {
+      .product-name {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .product-price {
+        font-size: 14px;
+        color: #fbb03b;
+        font-weight: bold;
+      }
+    }
+
+    &:hover {
+      img {
+        opacity: 0.9; // Slightly reduce opacity on hover
+      }
+    }
+  }
+  @media (max-width: 1200px) {
+    .slick-slide {
+      .related-product-item {
+        img {
+          max-width: 90%; // Cho phép một chút không gian xung quanh ảnh
+        }
+      }
+    }
+  }
+}
+.custom-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ddd; // Màu nền của nút
+  @media (max-width: 1200px) {
+    display: none; // Ẩn các nút điều hướng ở màn hình nhỏ
+  }
+}
+
+.ant-rate {
+  // Custom color for the filled stars
+  .ant-rate-star-full {
+    color: #fbb03b; // Màu của sao khi được đánh giá
+  }
+
+  // Custom color for the empty stars
+  .ant-rate-star-zero {
+    color: #ccc; // Màu của sao khi không được đánh giá
+  }
+
+  // Custom size of the stars
+  .ant-rate-star {
+    font-size: 24px; // Kích thước của sao
+  }
+  @media (max-width: 1200px) {
+    .ant-rate-star {
+      font-size: 16px; // Giảm kích thước sao cho màn hình nhỏ
     }
   }
 }

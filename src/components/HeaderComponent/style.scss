@@ -20,6 +20,9 @@
       color: red; // Giữ màu đỏ khi mục này được chọn
     }
   }
+  @media (max-width: 1200px) {
+    display: none;
+  }
 }
 
 .ant-menu-light.ant-menu-horizontal {
@@ -223,15 +226,68 @@
   }
 }
 
-.otp-input-modal {
-  // Thêm kiểu cho input nhập mã xác thực nếu cần
-  input[type="text"].otp-input {
-    // Kiểu cho input mã OTP
-    font-size: 20px;
-    padding: 10px;
-    text-align: center;
-    margin-bottom: 20px; // Thêm khoảng cách dưới input nếu cần
+.otp-choice-modal {
+  .ant-modal-content {
+    .ant-modal-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+
+      .send-otp-button {
+        width: 100%;
+        background-color: #ff4d4f;
+        border: none;
+        color: white;
+        padding: 12px 0;
+        font-size: 18px;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: darken(#ff4d4f, 10%);
+        }
+      }
+    }
   }
+}
+
+.otp-input-modal {
+  .ant-modal-content {
+    .ant-modal-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+
+      .input-code {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+
+        input {
+          text-align: center;
+          font-size: 20px;
+          border: 1px solid #d9d9d9;
+          border-radius: 4px;
+          padding: 10px;
+          width: 50px;
+          height: 50px;
+
+          &:focus {
+            border-color: #ff4d4f;
+            outline: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+.otp-error-message {
+  text-align: center;
+  color: red;
+  margin-bottom: 10px;
 }
 
 /* Button styles */
@@ -248,5 +304,75 @@
     background-color: darken(#ff4d4f, 10%); // Slightly darker on hover
   }
 }
+.suggestions-dropdown {
+  position: absolute;
+  z-index: 100;
+  background: white;
+  width: 100%;
+  border: 1px solid #ddd;
+  max-height: 200px;
+  overflow-y: auto;
+  top: 100%;
+  left: 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); // optional: for better visibility
 
-/* You can remove all other styles that are not related to the modal */
+  .suggestion-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:hover {
+      background-color: #f7f7f7;
+    }
+
+    .suggestion-image {
+      width: 50px; // or your desired width
+      height: 50px; // or your desired height
+      object-fit: cover;
+      margin-right: 10px;
+      border-radius: 4px; // optional: for rounded corners
+    }
+
+    .suggestion-text {
+      flex-grow: 1;
+      overflow: hidden;
+
+      .suggestion-title {
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .suggestion-price {
+        color: #888;
+        font-size: 0.9em;
+      }
+    }
+  }
+}
+
+.suggestions-dropdown,
+.otp-choice-modal,
+.otp-input-modal {
+  @media (max-width: 1200px) {
+    display: none;
+  }
+}
+
+.cart-count {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: #fbb03b;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
+}

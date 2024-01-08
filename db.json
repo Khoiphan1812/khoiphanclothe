@@ -2,12 +2,12 @@
   "products": [
     {
       "id": "1",
-      "title": "Áo khoác giả da cổ có khóa kéo",
+      "title": "Áo Sơ Mi Trơn Dài Tay Có Nút",
       "price": "1350000",
-      "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/83/409/XXL_p0168540983.jpg",
+      "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/11/086/XXL_p0193908611.jpg",
       "imgProductId": "1",
       "category": "shirt",
-      "subcategory": "jacket-shirt",
+      "subcategory": "dress-shirt",
       "tags": [
         "new"
       ],
@@ -16,6 +16,11 @@
         "M",
         "L",
         "XL"
+      ],
+      "colors": [
+        "https://d1flfk77wl2xk4.cloudfront.net/Assets/08/087/XXL_p0193908708.jpg",
+        "https://d1flfk77wl2xk4.cloudfront.net/Assets/06/087/XXL_p0193908706.jpg",
+        "https://d1flfk77wl2xk4.cloudfront.net/Assets/11/086/XXL_p0193908611.jpg"
       ]
     },
     {
@@ -54,9 +59,9 @@
     },
     {
       "id": "4",
-      "title": "Áo khoác hở tay khuỷu tay",
+      "title": "Sơ mi dài tay viền bảng màu",
       "price": "500000",
-      "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/49/630/L_p0109263049.jpg",
+      "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/66/717/XXL_p0201371766.jpg",
       "imgProductId": "4",
       "category": "shirt",
       "subcategory": "jacket-shirt",
@@ -66,6 +71,10 @@
       "sizes": [
         "S",
         "M"
+      ],
+      "colors": [
+        "https://d1flfk77wl2xk4.cloudfront.net/Assets/93/907/XXL_p0201390793.jpg",
+        "https://d1flfk77wl2xk4.cloudfront.net/Assets/66/717/XXL_p0201371766.jpg"
       ]
     },
     {
@@ -1219,7 +1228,7 @@
     {
       "id": "69",
       "title": "Mũ đơn giản 1 màu",
-      "price": "100000",
+      "price": "90000",
       "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/29/003/XXL_p0050900329.jpg",
       "imgProductId": "24",
       "category": "accessory",
@@ -1773,63 +1782,608 @@
         "L",
         "XL"
       ]
+    },
+    {
+      "id": "100",
+      "title": "Áo len có cổ nửa dây kéo",
+      "price": "1350000",
+      "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/84/566/XXL_p0198356684.jpg",
+      "imgProductId": "100",
+      "category": "shirt",
+      "subcategory": "jacket-shirt",
+      "tags": [
+        "new"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        "https://d1flfk77wl2xk4.cloudfront.net/Assets/96/566/XXL_p0198356696.jpg",
+        "https://d1flfk77wl2xk4.cloudfront.net/Assets/90/566/XXL_p0198356690.jpg",
+        "https://d1flfk77wl2xk4.cloudfront.net/Assets/84/566/XXL_p0198356684.jpg"
+      ]
     }
   ],
-  "categories": [
+  "comments": [
     {
-      "name": "shirt",
-      "subcategories": [
-        "polo-shirt",
-        "dress-shirt",
-        "t-shirt",
-        "jacket-shirt",
-        "sweater-shirt",
-        "hoodie-shirt"
-      ]
+      "productId": "100",
+      "userId": 1,
+      "text": "Sản phẩm rất đẹp",
+      "userFullName": "PHAN TRỌNG KHÔI",
+      "rating": 4,
+      "id": 3
     },
     {
-      "name": "pant",
-      "subcategories": [
-        "jean-pant",
-        "trouser-pant",
-        "kaki-pant",
-        "jogger-pant",
-        "sort-pant"
-      ]
+      "productId": "100",
+      "userId": 1,
+      "text": "10 điểm",
+      "userFullName": "PHAN TRỌNG KHÔI",
+      "rating": 5,
+      "id": 4
     },
     {
-      "name": "accessory",
-      "subcategories": [
-        "belt",
-        "wallet",
-        "hat",
-        "bag",
-        "glasses"
-      ]
+      "productId": "1",
+      "userId": 1,
+      "text": "sản phẩm rất đẹp",
+      "userFullName": "PHAN TRỌNG KHÔI",
+      "rating": 5,
+      "id": 5
     },
     {
-      "name": "shoe",
-      "subcategories": [
-        "sneaker",
-        "boot",
-        "sandal",
-        "slides"
-      ]
+      "productId": "1",
+      "userId": 1,
+      "text": "áo đẹp",
+      "userFullName": "PHAN TRỌNG KHÔI 1",
+      "rating": 1,
+      "id": 6
+    },
+    {
+      "productId": "1",
+      "userId": 1,
+      "text": "",
+      "userFullName": "PHAN TRỌNG KHÔI 1",
+      "rating": 5,
+      "id": 7
+    },
+    {
+      "productId": "36",
+      "userId": 1,
+      "text": "1",
+      "userFullName": "PHAN TRỌNG KHÔI 1",
+      "rating": 0,
+      "id": 8
     }
   ],
   "user": [
     {
       "email": "trongkhoiphan1812@gmail.com",
-      "fullName": "PHAN TRỌNG KHÔI",
+      "fullName": "PHAN TRỌNG KHÔI 1",
       "phoneNumber": "0905139129",
-      "dob": "",
+      "dob": "2023-12-14",
       "gender": "male",
       "province": "48",
       "district": "492",
-      "ward": "",
+      "ward": "20230",
       "streetAddress": "153 Thanh Long",
       "id": 1,
-      "addressType": "home"
+      "addressType": "company"
+    },
+    {
+      "email": "khoipro1812@gmail.com",
+      "fullName": "",
+      "phoneNumber": "",
+      "dob": "",
+      "gender": "",
+      "province": "",
+      "district": "",
+      "ward": "",
+      "streetAddress": "",
+      "id": 2
+    }
+  ],
+  "orders": [
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "44",
+        "district": "452",
+        "ward": "18943",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "3",
+          "title": "Áo khoác phao trơn cổ đứng",
+          "price": "900000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/02/848/XXL_p0202684802.jpg",
+          "size": "M",
+          "availableSizes": [
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2023-12-26T15:21:02.640Z",
+      "paymentMethod": "cod",
+      "deliveryOption": "",
+      "id": 1
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "44",
+        "district": "452",
+        "ward": "18943",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "7",
+          "title": "Quần ống suông trơn cạp cao giữa",
+          "price": "450000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/66/322/XXL_p0194032266.jpg",
+          "size": "S",
+          "availableSizes": [
+            "S",
+            "M",
+            "L"
+          ],
+          "quantity": 1
+        },
+        {
+          "id": "100",
+          "title": "Áo len có cổ nửa dây kéo",
+          "price": "1350000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/84/566/XXL_p0198356684.jpg",
+          "size": "S",
+          "availableSizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        },
+        {
+          "id": "13",
+          "title": "Quần lửng Harem có dây rút trơn cạp cao",
+          "price": "450000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/74/349/XXL_p0190234974.jpg",
+          "size": "S",
+          "availableSizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2023-12-26T20:00:14.284Z",
+      "paymentMethod": "cod",
+      "deliveryOption": "",
+      "id": 2
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "44",
+        "district": "452",
+        "ward": "18943",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "4",
+          "title": "Áo khoác hở tay khuỷu tay",
+          "price": "500000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/49/630/L_p0109263049.jpg",
+          "size": "S",
+          "availableSizes": [
+            "S",
+            "M"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2023-12-27T10:16:20.652Z",
+      "paymentMethod": "cod",
+      "deliveryOption": "",
+      "id": 3
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "44",
+        "district": "452",
+        "ward": "18943",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "4",
+          "title": "Áo khoác hở tay khuỷu tay",
+          "price": "500000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/49/630/L_p0109263049.jpg",
+          "size": "S",
+          "availableSizes": [
+            "S",
+            "M"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2023-12-27T10:19:59.244Z",
+      "paymentMethod": "cod",
+      "deliveryOption": "",
+      "id": 4
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "44",
+        "district": "452",
+        "ward": "18943",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "3",
+          "title": "Áo khoác phao trơn cổ đứng",
+          "price": "900000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/02/848/XXL_p0202684802.jpg",
+          "size": "M",
+          "availableSizes": [
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2023-12-27T10:28:16.661Z",
+      "paymentMethod": "cod",
+      "deliveryOption": "",
+      "id": 5
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "44",
+        "district": "452",
+        "ward": "18943",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "3",
+          "title": "Áo khoác phao trơn cổ đứng",
+          "price": "900000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/02/848/XXL_p0202684802.jpg",
+          "size": "M",
+          "availableSizes": [
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2023-12-27T10:29:07.340Z",
+      "paymentMethod": "cod",
+      "deliveryOption": "",
+      "id": 6
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "44",
+        "district": "452",
+        "ward": "18943",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "3",
+          "title": "Áo khoác phao trơn cổ đứng",
+          "price": "900000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/02/848/XXL_p0202684802.jpg",
+          "size": "M",
+          "availableSizes": [
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2023-12-27T12:02:07.850Z",
+      "paymentMethod": "cod",
+      "deliveryOption": "",
+      "id": 7
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "44",
+        "district": "452",
+        "ward": "18943",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "11",
+          "title": "Áo sơ mi kẻ sọc",
+          "price": "350000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/81/458/L_p0093345881.jpg",
+          "size": "S",
+          "availableSizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2023-12-27T12:06:45.690Z",
+      "paymentMethod": "cod",
+      "deliveryOption": "",
+      "id": 8
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "44",
+        "district": "452",
+        "ward": "18943",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "14",
+          "title": "Quần Harem crop trơn cạp cao",
+          "price": "350000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/75/444/XXL_p0190244475.jpg",
+          "size": "S",
+          "availableSizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2023-12-27T12:10:23.250Z",
+      "paymentMethod": "cod",
+      "deliveryOption": "",
+      "id": 9
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "44",
+        "district": "452",
+        "ward": "18943",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "2",
+          "title": "Áo khoác có dây kéo đính nhãn trơn",
+          "price": "1000000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/92/943/XXL_p0202094392.jpg",
+          "size": "S",
+          "availableSizes": [
+            "S",
+            "M",
+            "L"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2024-01-04T18:25:15.870Z",
+      "paymentMethod": "cod",
+      "deliveryOption": "deliveryHome",
+      "id": 10
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "48",
+        "district": "492",
+        "ward": "20230",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "1",
+          "title": "Áo Sơ Mi Trơn Dài Tay Có Nút",
+          "price": "1350000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/11/086/XXL_p0193908611.jpg",
+          "size": "M",
+          "availableSizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2024-01-05T05:21:52.576Z",
+      "paymentMethod": "inStore",
+      "deliveryOption": "pickup",
+      "id": 11
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "48",
+        "district": "492",
+        "ward": "20230",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "1",
+          "title": "Áo Sơ Mi Trơn Dài Tay Có Nút",
+          "price": "1350000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/11/086/XXL_p0193908611.jpg",
+          "size": "M",
+          "availableSizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        },
+        {
+          "id": "3",
+          "title": "Áo khoác phao trơn cổ đứng",
+          "price": "900000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/02/848/XXL_p0202684802.jpg",
+          "size": "M",
+          "availableSizes": [
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2024-01-05T10:52:12.592Z",
+      "paymentMethod": "inStore",
+      "deliveryOption": "pickup",
+      "id": 12
+    },
+    {
+      "buyer": {
+        "email": "trongkhoiphan1812@gmail.com",
+        "fullName": "PHAN TRỌNG KHÔI 1",
+        "phoneNumber": "0905139129",
+        "dob": "2023-12-14",
+        "gender": "male",
+        "province": "48",
+        "district": "492",
+        "ward": "20230",
+        "streetAddress": "153 Thanh Long",
+        "id": 1,
+        "addressType": "company"
+      },
+      "items": [
+        {
+          "id": "19",
+          "title": "Áo sơ mi thêu cổ ve áo",
+          "price": "550000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/61/725/XXL_p0199072561.jpg",
+          "size": "S",
+          "availableSizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 2
+        },
+        {
+          "id": "33",
+          "title": "Quần jean ống rộng rách",
+          "price": "650000",
+          "image": "https://d1flfk77wl2xk4.cloudfront.net/Assets/72/812/XXL_p0149881272.jpg",
+          "size": "S",
+          "availableSizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ],
+          "quantity": 1
+        }
+      ],
+      "dateOfBill": "2024-01-05T11:37:05.710Z",
+      "paymentMethod": "inStore",
+      "deliveryOption": "pickup",
+      "id": 13
     }
   ]
 }

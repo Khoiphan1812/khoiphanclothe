@@ -57,7 +57,7 @@
 
     .line {
       padding-top: 10px;
-      color: red;
+      color: #fbb03b;
     }
 
     p {
@@ -71,6 +71,36 @@
 
     img {
       max-width: 100px; // Adjust as needed
+    }
+  }
+  .newsletter {
+    display: flex;
+    flex-direction: column;
+
+    input[type="email"] {
+      margin-bottom: 10px; // khoảng cách giữa input và button
+      padding: 10px; // đệm cho input
+      border: 1px solid #ccc; // viền cho input
+      border-radius: 4px; // bo góc cho input
+    }
+
+    button[type="submit"] {
+      padding: 10px 20px; // đệm cho button
+      background-color: #fbb03b; // màu nền cho button
+      color: white; // màu chữ cho button
+      border: none; // bỏ viền cho button
+      border-radius: 4px; // bo góc cho button
+      cursor: pointer; // con trỏ chuột khi hover
+      transition: background-color 0.3s ease; // hiệu ứng khi hover
+
+      &:hover {
+        background-color: darken(#fbb03b, 10%); // làm đậm màu nền khi hover
+      }
+
+      &:focus {
+        outline: none; // bỏ đường viền khi focus
+        box-shadow: 0 0 0 2px rgba(#fbb03b, 0.5); // tạo box-shadow khi focus
+      }
     }
   }
 }

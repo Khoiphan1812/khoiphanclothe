@@ -1,13 +1,24 @@
-import { Button, Card, Col, Row, Select } from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, Card, Col, Pagination, Row, Select, message } from "antd";
+import React, { useEffect } from "react";
 import "./style.scss";
 import HotProducts from "../HotProductComponent";
-import { Link, useLocation } from "react-router-dom";
-import { productApis } from "../../apis/productsAPI";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchShoesByCategory,
+  goToPage,
+  setSortedProducts,
+} from "../../redux/features/product/productSlice";
+import { toggleLoginModal } from "../../redux/features/auth/authSlice";
 
 const { Option } = Select;
 
-const ProductSection = ({ title, products }) => (
+const ProductSection = ({
+  title,
+  products = [],
+  handleAddToCart,
+  handleBuyNow,
+}) => (
   <div
     className={`product-section product-${title
       .toLowerCase()
@@ -28,8 +39,17 @@ const ProductSection = ({ title, products }) => (
               <Card.Meta title={product.title} />
               <p className="product-price">{product.price}</p>
               <div className="product-actions">
-                <Button className="add-to-cart-btn">Thêm vào giỏ hàng</Button>
-                <Button className="buy-now-btn" type="primary">
+                <Button
+                  className="add-to-cart-btn"
+                  onClick={() => handleAddToCart(product)}
+                >
+                  Thêm giỏ hàng
+                </Button>
+                <Button
+                  className="buy-now-btn"
+                  type="primary"
+                  onClick={() => handleBuyNow(product)}
+                >
                   Mua ngay
                 </Button>
               </div>
@@ -42,76 +62,81 @@ const ProductSection = ({ title, products }) => (
 );
 
 const ShoeComponent = () => {
-  const [shoes, setShoes] = useState([]);
-  const [filteredShoes, setFilteredShoes] = useState([]);
-  const [title, setTitle] = useState("Giày Dép");
-
+  const dispatch = useDispatch();
+  const { shoeProducts, isLoading, error, pagination } = useSelector(
+    (state) => state.products
+  );
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const navigate = useNavigate();
   const location = useLocation();
+  const categoryQuery =
+    new URLSearchParams(location.search).get("category") || "all";
+
+  const title = "GIÀY DÉP";
 
   useEffect(() => {
-    const loadShoes = async () => {
-      try {
-        const allProducts = await productApis.getAllProducts();
-        const params = new URLSearchParams(location.search);
-        const categoryQuery = params.get("category");
-
-        let newTitle = "GIÀY DÉP"; // Default title
-        let filteredProducts = allProducts.filter(
-          (product) => product.category === "shoe"
-        );
-
-        if (categoryQuery === "sneaker") {
-          newTitle = "GIÀY SNEAKER";
-          filteredProducts = filteredProducts.filter(
-            (product) => product.subcategory === "sneaker-shoe"
-          );
-        } else if (categoryQuery === "boot") {
-          newTitle = "GIÀY BOOT";
-          filteredProducts = filteredProducts.filter(
-            (product) => product.subcategory === "boot-shoe"
-          );
-        } else if (categoryQuery === "sandal") {
-          newTitle = "GIÀY SANDAL";
-          filteredProducts = filteredProducts.filter(
-            (product) => product.subcategory === "sandal-shoe"
-          );
-        } else if (categoryQuery === "slides") {
-          newTitle = "DÉP NAM";
-          filteredProducts = filteredProducts.filter(
-            (product) => product.subcategory === "slides-shoe"
-          );
-        }
-
-        setTitle(newTitle);
-        setShoes(filteredProducts);
-        setFilteredShoes(filteredProducts);
-      } catch (error) {
-        console.error("Failed to fetch products", error);
-      }
-    };
-
-    loadShoes();
-  }, [location.search]);
+    dispatch(
+      fetchShoesByCategory({
+        _page: pagination.currentPage,
+        _limit: pagination.productsPerPage,
+        categoryQuery: categoryQuery,
+      })
+    );
+  }, [
+    dispatch,
+    pagination.currentPage,
+    pagination.productsPerPage,
+    categoryQuery,
+  ]);
 
   const handleSortChange = (value) => {
-    let sortedShoe = [...shoes];
+    dispatch(
+      setSortedProducts({
+        sortType: value,
+        productType: "shoeProducts",
+      })
+    );
+  };
 
-    if (value === "priceLowHigh") {
-      sortedShoe.sort(
-        (a, b) =>
-          parseFloat(a.price.replace(/\./g, "")) -
-          parseFloat(b.price.replace(/\./g, ""))
-      );
-    } else if (value === "priceHighLow") {
-      sortedShoe.sort(
-        (a, b) =>
-          parseFloat(b.price.replace(/\./g, "")) -
-          parseFloat(a.price.replace(/\./g, ""))
+  const handlePageChange = (page) => {
+    dispatch(goToPage(page));
+    dispatch(
+      fetchShoesByCategory({
+        _page: page,
+        _limit: pagination.productsPerPage,
+      })
+    );
+  };
+
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      message.warning("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      dispatch(toggleLoginModal());
+    } else {
+      navigate("/gio-hang");
+      message.info(
+        "Vui lòng chọn size và số lượng sản phẩm trước khi thêm vào giỏ hàng!"
       );
     }
-
-    setFilteredShoes(sortedShoe);
   };
+
+  const handleBuyNow = () => {
+    if (!isLoggedIn) {
+      message.warning("Vui lòng đăng nhập để mua sản phẩm!");
+      dispatch(toggleLoginModal());
+    } else {
+      navigate("/gio-hang");
+      message.info("Vui lòng chọn size và số lượng sản phẩm trước khi mua!");
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="layout">
@@ -133,7 +158,19 @@ const ShoeComponent = () => {
             </Select>
           </div>
         </div>
-        <ProductSection title="" products={filteredShoes} />
+        <ProductSection
+          title=""
+          products={shoeProducts}
+          handleAddToCart={handleAddToCart}
+          handleBuyNow={handleBuyNow}
+        />
+        <Pagination
+          defaultPageSize={pagination.productsPerPage}
+          current={pagination.currentPage} // current page from state
+          total={pagination.totalProducts} // total products from state
+          onChange={handlePageChange} // handle page change
+          showSizeChanger={false}
+        />
       </div>
       <div className="sidebar">
         <HotProducts />

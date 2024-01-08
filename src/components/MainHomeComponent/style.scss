@@ -1,6 +1,6 @@
 .carousel {
   .slick-slide {
-    height: 500px;
+    height: 70vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -47,25 +47,33 @@
 
   .product-actions {
     display: flex;
-    justify-content: center; // Center buttons horizontally
-    align-items: center; // Center buttons vertically (if needed)
+    justify-content: center;
+    align-items: center;
     margin-top: 1rem;
-    gap: 10px; // Adds space between buttons
 
     button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px 20px; // Adjust padding as needed
+      padding: 8px 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: clip;
+      min-width: 90px;
+      display: inline-block;
       text-align: center;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      vertical-align: middle;
+      font-size: 14px;
     }
 
     .add-to-cart-btn {
       background-color: #f0f0f0;
       border: 1px solid #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex-basis: 60%;
+      white-space: nowrap; // Prevents text from wrapping
+      overflow: visible; // Keeps the content within the button
+      text-overflow: ellipsis; // Adds an ellipsis if the text is too long
 
       &:hover {
         background-color: #e6e6e6;
@@ -77,9 +85,16 @@
       background-color: #fbb03b;
       border: 1px solid #fbb03b;
       color: white;
-
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      white-space: nowrap; // Prevents text from wrapping
+      overflow: hidden; // Keeps the content within the button
+      text-overflow: ellipsis; // Adds an ellipsis if the text is too long
+      flex-basis: 38%;
       &:hover {
-        background-color: darken(#fbb03b, 10%);
+        background-color: #c0c0c0;
         border-color: darken(#fbb03b, 10%);
       }
     }
@@ -132,5 +147,50 @@
   .Col {
     padding-left: 15px; // Điều chỉnh theo nhu cầu
     padding-right: 15px; // Điều chỉnh theo nhu cầu
+  }
+}
+
+// Responsive styles for widths at or below 1200px
+@media (max-width: 1200px) {
+  .carousel .slick-slide img {
+    // Adjust the size or hide carousel images as needed
+    height: auto; // Change height to auto for better aspect ratio
+    width: 100%; // Full width to avoid stretching
+  }
+
+  .product-section {
+    .ant-card {
+      .ant-card-cover img {
+        height: auto; // Adjust height of images in cards
+      }
+    }
+
+    h1 {
+      font-size: 2rem; // Smaller font size for section titles
+    }
+
+    .product-actions {
+      flex-direction: column; // Stack buttons vertically
+
+      button {
+        width: 100%; // Full width buttons on smaller screens
+        padding: 8px 10px; // Adjust padding to fit smaller screens
+      }
+
+      .add-to-cart-btn,
+      .buy-now-btn {
+        font-size: 14px;
+        padding: 8px 10px; // Adjust padding for smaller buttons
+      }
+    }
+  }
+
+  .banner-item {
+    height: 300px; // Reduce the height of the banner on smaller screens
+
+    h2,
+    p {
+      font-size: 36px; // Reduce the font size of text on banners
+    }
   }
 }

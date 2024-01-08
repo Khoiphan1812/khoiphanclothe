@@ -1,0 +1,92 @@
+.comment-section {
+  .comments-title {
+    font-size: 24px; // Đặt kích thước font cho tiêu đề
+    color: #333; // Đặt màu chữ
+    margin: 50px 0; // Tạo khoảng cách giữa tiêu đề và bình luận đầu tiên
+    padding-left: 10px; // Nếu muốn căn lề trái cho tiêu đề
+  }
+  .comment {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column; // Đặt các items theo chiều dọc
+    margin-bottom: 20px; // Tăng khoảng cách giữa các bình luận
+
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .user-avatar {
+      background-color: #ebf4ff;
+      border-radius: 50%;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      height: 50px;
+      width: 50px;
+      margin-right: 10px; // Khoảng cách giữa avatar và nội dung
+      flex-shrink: 0;
+    }
+
+    .comment-content {
+      flex-grow: 1;
+
+      .comment-user {
+        display: flex;
+        align-items: center; // Căn chỉnh avatar và tên người dùng cùng hàng
+        margin-bottom: 5px;
+        strong {
+          font-size: 16px; // Tăng kích thước font chữ cho tên người dùng
+          color: #333; // Màu sắc cho tên người dùng
+          margin-right: 10px; // Khoảng cách giữa tên người dùng và nội dung bình luận
+        }
+
+        .user-rating {
+          display: flex;
+          align-items: center;
+          margin-left: auto; // Đẩy đánh giá sao ra bên phải của tên người dùng
+        }
+      }
+
+      .comment-text {
+        background-color: #f5f5f5; // Màu nền cho nội dung bình luận
+        padding: 10px;
+        border-radius: 5px; // Bo tròn góc cho khung nội dung bình luận
+        white-space: pre-wrap; // Cho phép xuống dòng tự nhiên và giữ khoảng trắng
+      }
+
+      .comment-actions {
+        display: flex;
+        justify-content: flex-start; // Đặt các nút hành động ở góc dưới bên trái
+        margin-top: auto; // Đẩy các nút hành động xuống cuối cùng của container
+
+        Button {
+          margin-right: 10px; // Khoảng cách giữa các nút
+        }
+      }
+    }
+  }
+
+  .add-comment {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+
+    .rating-section {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px; // Khoảng cách giữa đánh giá sao và ô nhập bình luận
+
+      span {
+        margin-right: 8px; // Khoảng cách giữa text và sao đánh giá
+      }
+    }
+
+    .ant-input {
+      margin-bottom: 10px; // Khoảng cách giữa ô nhập và nút
+    }
+  }
+}

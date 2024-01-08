@@ -1,13 +1,24 @@
-import { Button, Card, Col, Row, Select } from "antd";
-import React, { useEffect, useState } from "react";
-import "./style.scss";
+import { Button, Card, Col, Pagination, Row, Select, message } from "antd";
+import React, { useEffect } from "react";
+import "./stylenp.scss";
 import HotProducts from "../HotProductComponent";
-import { Link } from "react-router-dom";
-import { productApis } from "../../apis/productsAPI";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchNewProducts,
+  goToPage,
+  setSortedProducts,
+} from "../../redux/features/product/productSlice";
+import { toggleLoginModal } from "../../redux/features/auth/authSlice";
 
 const { Option } = Select;
 
-const ProductSection = ({ title, products }) => (
+const ProductSection = ({
+  title,
+  products = [],
+  handleAddToCart,
+  handleBuyNow,
+}) => (
   <div
     className={`product-section product-${title
       .toLowerCase()
@@ -15,64 +26,107 @@ const ProductSection = ({ title, products }) => (
   >
     <h1>{title}</h1>
     <Row gutter={16}>
-      {products.map((product, index) => (
-        <Col span={6} key={product.id + index}>
-          <Link
-            to={`/product/${product.id}`}
-            style={{ textDecoration: "none" }}
-          >
-            <Card
-              hoverable
-              cover={<img alt={product.title} src={product.image} />}
+      {products &&
+        products.map((product, index) => (
+          <Col span={6} key={product.id + index}>
+            <Link
+              to={`/product/${product.id}`}
+              style={{ textDecoration: "none" }}
             >
-              <Card.Meta title={product.title} />
-              <p className="product-price">{product.price}</p>
-              <div className="product-actions">
-                <Button className="add-to-cart-btn">Thêm vào giỏ hàng</Button>
-                <Button className="buy-now-btn" type="primary">
-                  Mua ngay
-                </Button>
-              </div>
-            </Card>
-          </Link>
-        </Col>
-      ))}
+              <Card
+                hoverable
+                cover={<img alt={product.title} src={product.image} />}
+              >
+                <Card.Meta title={product.title} />
+                <p className="product-price">{product.price}</p>
+                <div className="product-actions">
+                  <Button
+                    className="add-to-cart-btn"
+                    onClick={() => handleAddToCart(product)}
+                  >
+                    Thêm giỏ hàng
+                  </Button>
+                  <Button
+                    className="buy-now-btn"
+                    type="primary"
+                    onClick={() => handleBuyNow(product)}
+                  >
+                    Mua ngay
+                  </Button>
+                </div>
+              </Card>
+            </Link>
+          </Col>
+        ))}
     </Row>
   </div>
 );
 
 const NewProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const dispatch = useDispatch();
+  const { newProducts, isLoading, error, pagination } = useSelector(
+    (state) => state.products
+  );
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const allProducts = await productApis.getAllProducts();
-        const newProducts = allProducts.filter(
-          (product) => product.tags && product.tags.includes("new")
-        );
-        setProducts(newProducts);
-        setFilteredProducts(newProducts);
-      } catch (error) {
-        console.error("Failed to fetch products", error);
-      }
-    };
+    dispatch(
+      fetchNewProducts({
+        _page: pagination.currentPage,
+        _limit: pagination.productsPerPage,
+      })
+    );
+  }, [dispatch, pagination.currentPage, pagination.productsPerPage]); // Dependencies của useEffect
 
-    loadProducts();
-  }, []);
+  const handlePageChange = (page) => {
+    dispatch(goToPage(page));
+    dispatch(
+      fetchNewProducts({
+        _page: page,
+        _limit: pagination.productsPerPage,
+      })
+    );
+  };
 
   const handleSortChange = (value) => {
-    let sortedProducts = [...products];
-
-    if (value === "priceLowHigh") {
-      sortedProducts.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-    } else if (value === "priceHighLow") {
-      sortedProducts.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-    }
-
-    setFilteredProducts(sortedProducts);
+    dispatch(
+      setSortedProducts({
+        sortType: value,
+        productType: "newProducts",
+      })
+    );
   };
+
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      message.warning("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      dispatch(toggleLoginModal());
+    } else {
+      navigate("/gio-hang");
+      message.info(
+        "Vui lòng chọn size và số lượng sản phẩm trước khi thêm vào giỏ hàng!"
+      );
+    }
+  };
+
+  const handleBuyNow = () => {
+    if (!isLoggedIn) {
+      message.warning("Vui lòng đăng nhập để mua sản phẩm!");
+      dispatch(toggleLoginModal());
+    } else {
+      navigate("/gio-hang");
+      message.info("Vui lòng chọn size và số lượng sản phẩm trước khi mua!");
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="layout">
@@ -94,7 +148,19 @@ const NewProducts = () => {
             </Select>
           </div>
         </div>
-        <ProductSection title="" products={filteredProducts} />
+        <ProductSection
+          title=""
+          products={newProducts}
+          handleAddToCart={handleAddToCart}
+          handleBuyNow={handleBuyNow}
+        />
+        <Pagination
+          defaultPageSize={pagination.productsPerPage}
+          current={pagination.currentPage} // current page from state
+          total={pagination.totalProducts} // total products from state
+          onChange={handlePageChange}
+          showSizeChanger={false}
+        />
       </div>
       <div className="sidebar">
         <HotProducts />

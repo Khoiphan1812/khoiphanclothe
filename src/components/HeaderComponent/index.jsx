@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Input, Menu, Modal } from "antd";
+import React, { useRef, useState } from "react";
+import { Button, Input, Menu, Modal, message } from "antd";
 import {
   ShoppingCartOutlined,
   SearchOutlined,
@@ -12,50 +12,104 @@ import SubMenu from "antd/es/menu/SubMenu";
 import { ROUTES } from "../../constants/routes";
 import { userApis } from "../../apis/userAPI";
 import emailjs from "emailjs-com";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setEmail,
+  setUserInfo,
+  toggleLoginModal,
+} from "../../redux/features/auth/authSlice";
+import { searchProducts } from "../../redux/features/product/productSlice";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup"; // Import yupResolver
+import * as Yup from "yup"; // Import Yup to define your schema
+
+// Define your schema
+const emailSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Địa chỉ email không hợp lệ")
+    .required("Vui lòng nhập email"),
+});
+
+const handleLoginSuccess = (userInfo, dispatch) => {
+  // Lưu thông tin người dùng vào Redux store
+  dispatch(setUserInfo(userInfo));
+
+  // Lưu thông tin người dùng vào localStorage
+  localStorage.setItem("userInfo", JSON.stringify(userInfo));
+};
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
-  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
   const [isOTPChoiceModalVisible, setIsOTPChoiceModalVisible] = useState(false);
   const [isOTPInputModalVisible, setIsOTPInputModalVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [otp, setOtp] = useState("");
-  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState(Array(4).fill(""));
   const [selectedMenu, setSelectedMenu] = useState(ROUTES.NEW);
+  const [otpExpectedFromServer, setOtpExpectedFromServer] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const dispatch = useDispatch();
+  const email = useSelector((state) => state.auth.email);
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+  const searchResults = useSelector((state) => state.products.searchResults);
+
+  const cartItems = useSelector((state) => state.carts.carts);
+  const cartItemCount = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
+  const isLoginModalVisible = useSelector(
+    (state) => state.auth.isLoginModalVisible
+  );
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(emailSchema),
+  });
 
   const handleDressClick = () => {
     navigate(`${ROUTES.SHIRT}?category=dress-shirt`);
   };
 
   const onSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (value.trim()) {
+      dispatch(searchProducts(value));
+    }
   };
 
-  const onSearch = () => {
-    // Thực hiện hành động tìm kiếm ở đây
-    console.log("Tìm kiếm:", searchTerm);
-    // Bạn có thể lọc hoặc gọi API tìm kiếm dựa trên `searchTerm`
+  const handleSuggestionClick = (productId) => {
+    navigate(`/product/${productId}`);
+    setSearchTerm("");
   };
 
   // Function to show the login modal
   const showLoginModal = () => {
-    setIsLoginModalVisible(true);
+    dispatch(toggleLoginModal());
+    setOtp(["", "", "", ""]);
   };
 
   // Function to handle closing the modal
   const handleCancel = () => {
-    setIsLoginModalVisible(false);
+    dispatch(toggleLoginModal());
     setIsOTPChoiceModalVisible(false);
     setIsOTPInputModalVisible(false);
   };
 
-  const handleEmailInputChange = (e) => {
-    setEmail(e.target.value);
-  };
+  const handleFormSubmit = handleSubmit((data) => {
+    // Dispatch email vào Redux store
+    dispatch(setEmail(data.email));
+    showOTPModal(); // Logic to show the OTP Modal after successful validation
+  });
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    setIsLoginModalVisible(false);
+  const showOTPModal = () => {
+    // Đóng modal email
+    dispatch(toggleLoginModal());
+    // Mở modal OTP
     setIsOTPChoiceModalVisible(true);
   };
 
@@ -86,29 +140,65 @@ const HeaderComponent = () => {
       console.log("Email successfully sent!", response.status, response.text);
       setIsOTPChoiceModalVisible(false);
       setIsOTPInputModalVisible(true);
-      setOtp(generatedOTP); // Store the OTP for verification later
+      // Lưu OTP từ server vào state để kiểm tra sau này
+      setOtpExpectedFromServer(generatedOTP);
     } catch (error) {
       console.error("Error sending email:", error);
     }
   };
 
-  const handleOTPInputChange = async (e) => {
-    const inputOTP = e.target.value;
-    if (inputOTP.length === 4 && inputOTP === otp.toString()) {
-      // Đóng Modal nhập OTP
-      setIsOTPInputModalVisible(false);
-      // Gọi hàm để xử lý đăng nhập hoặc tạo mới người dùng
-      await submitEmail();
+  const inputsRef = useRef([]);
+
+  const handleOTPInputChange = (e, index) => {
+    const newOtp = [...otp];
+    newOtp[index] = e.target.value;
+    setOtp(newOtp);
+
+    // Xóa thông báo lỗi cũ (nếu có)
+    setOtpError("");
+
+    inputsRef.current[index].value = e.target.value;
+
+    if (e.target.value && index < otp.length - 1) {
+      inputsRef.current[index + 1].focus();
+    }
+
+    if (newOtp.join("").length === 4) {
+      if (newOtp.join("") === otpExpectedFromServer) {
+        setIsOTPInputModalVisible(false);
+        submitEmail();
+      } else {
+        // Reset OTP và thông báo lỗi
+        setOtpError(
+          <>
+            Bạn đã nhập sai OTP
+            <br />
+            Vui lòng nhập lại
+          </>
+        );
+        setOtp(Array(4).fill(""));
+        message.error("Bạn đã nhập sai OTP.");
+
+        // Đặt lại giá trị của các ô nhập và chuyển con trỏ về ô đầu tiên
+        setOtp(["", "", "", ""]);
+        inputsRef.current.forEach((input) => (input.value = ""));
+        setTimeout(() => inputsRef.current[0].focus(), 100);
+      }
     }
   };
 
   const submitEmail = async () => {
     try {
       const users = await userApis.getUserByEmail(email);
+
       if (users.length === 0) {
-        // Create a new user if the email number does not exist
+        // Tạo người dùng mới nếu email chưa tồn tại
         const newUser = await userApis.createUserWithEmail(email);
-        // Navigate to the user profile page with the new user's email number and initial state
+
+        // Gọi hàm xử lý thành công đăng nhập cho người dùng mới
+        handleLoginSuccess(newUser, dispatch);
+
+        // Chuyển hướng đến trang hồ sơ người dùng với thông tin mới
         navigate(`/user/${newUser.id}`, {
           state: {
             email: newUser.email,
@@ -116,7 +206,10 @@ const HeaderComponent = () => {
           },
         });
       } else {
-        // If the user already exists, navigate to their profile page with the user's data as state
+        // Nếu người dùng đã tồn tại, chuyển hướng đến trang hồ sơ của họ
+
+        // Gọi hàm xử lý thành công đăng nhập cho người dùng hiện tại
+        handleLoginSuccess(users[0], dispatch);
         navigate(`/user/${users[0].id}`, {
           state: { user: users[0] },
         });
@@ -129,6 +222,14 @@ const HeaderComponent = () => {
   const handleClickMenuItem = (key) => {
     setSelectedMenu(key);
     navigate(key);
+  };
+
+  const handleLoginClick = () => {
+    if (userInfo) {
+      navigate(`/user/${userInfo.id}`);
+    } else {
+      showLoginModal();
+    }
   };
 
   return (
@@ -163,33 +264,37 @@ const HeaderComponent = () => {
           key={ROUTES.SHIRT}
         >
           <Menu.Item
-            onClick={() => navigate(`${ROUTES.SHIRT}?category=polo-shirts`)}
+            onClick={() => navigate(`${ROUTES.SHIRT}?category=polo-shirt`)}
           >
             Áo polo
           </Menu.Item>
           <Menu.Item onClick={handleDressClick}>Áo sơ mi</Menu.Item>
           <Menu.Item
-            onClick={() => navigate(`${ROUTES.SHIRT}?category=t-shirts`)}
+            onClick={() => navigate(`${ROUTES.SHIRT}?category=t-shirt`)}
           >
             Áo thun
           </Menu.Item>
           <Menu.Item
-            onClick={() => navigate(`${ROUTES.SHIRT}?category=jacket-shirts`)}
+            onClick={() => navigate(`${ROUTES.SHIRT}?category=jacket-shirt`)}
           >
             Áo khoác
           </Menu.Item>
           <Menu.Item
-            onClick={() => navigate(`${ROUTES.SHIRT}?category=sweater-shirts`)}
+            onClick={() => navigate(`${ROUTES.SHIRT}?category=sweater-shirt`)}
           >
             Áo len
           </Menu.Item>
           <Menu.Item
-            onClick={() => navigate(`${ROUTES.SHIRT}?category=hoodie-shirts`)}
+            onClick={() => navigate(`${ROUTES.SHIRT}?category=hoodie-shirt`)}
           >
             Áo hoodie
           </Menu.Item>
         </SubMenu>
-        <SubMenu title="QUẦN NAM" onTitleClick={() => navigate(ROUTES.TROUSER)}>
+        <SubMenu
+          title="QUẦN NAM"
+          onTitleClick={() => handleClickMenuItem(ROUTES.TROUSER)}
+          key={ROUTES.TROUSER}
+        >
           <Menu.Item
             onClick={() => navigate(`${ROUTES.TROUSER}?category=jean-pant`)}
           >
@@ -217,8 +322,9 @@ const HeaderComponent = () => {
           </Menu.Item>
         </SubMenu>
         <SubMenu
-          title="PHỤ KIỆN"
-          onTitleClick={() => navigate(ROUTES.ACCESSORY)}
+          title="PHỤ KIÊN"
+          onTitleClick={() => handleClickMenuItem(ROUTES.ACCESSORY)}
+          key={ROUTES.ACCESSORY}
         >
           <Menu.Item
             onClick={() => navigate(`${ROUTES.ACCESSORY}?category=belt`)}
@@ -246,7 +352,11 @@ const HeaderComponent = () => {
             Mắt kính
           </Menu.Item>
         </SubMenu>
-        <SubMenu title="GIÀY DÉP" onTitleClick={() => navigate(ROUTES.SHOE)}>
+        <SubMenu
+          title="GIÀY DÉP"
+          onTitleClick={() => handleClickMenuItem(ROUTES.SHOE)}
+          key={ROUTES.SHOE}
+        >
           <Menu.Item
             onClick={() => navigate(`${ROUTES.SHOE}?category=sneaker`)}
           >
@@ -265,28 +375,53 @@ const HeaderComponent = () => {
 
         <Menu.Item
           style={{ color: "red" }}
-          onClick={() => navigate(ROUTES.SALE)}
+          onClick={() => handleClickMenuItem(ROUTES.SALE)}
+          key={ROUTES.SALE}
         >
           OUTLET SALE
         </Menu.Item>
-        <Menu.Item key="search">
+        <Menu.Item key="search" style={{ position: "relative" }}>
           <Input
-            placeholder="Tìm kiếm"
+            placeholder="Tìm kiếm sản phẩm..."
             value={searchTerm}
             onChange={onSearchChange}
-            onPressEnter={onSearch}
             style={{ verticalAlign: "middle" }}
           />
-          <SearchOutlined
-            onClick={onSearch}
-            style={{ cursor: "pointer", marginLeft: "5px" }}
-          />
+          <SearchOutlined style={{ cursor: "pointer", marginLeft: "5px" }} />
+          {searchTerm && (
+            <div className="suggestions-dropdown">
+              {searchResults.map((item) => (
+                <div
+                  className="suggestion-item"
+                  key={item.id}
+                  onClick={() => handleSuggestionClick(item.id)}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="suggestion-image"
+                  />
+                  <div className="suggestion-text">
+                    <div className="suggestion-title">{item.title}</div>
+                    <div className="suggestion-price">{item.price}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </Menu.Item>
         <Menu.Item
-          icon={<ShoppingCartOutlined />}
+          icon={
+            <>
+              <ShoppingCartOutlined />
+              {cartItemCount > 0 && (
+                <span className="cart-count">{cartItemCount}</span>
+              )}
+            </>
+          }
           onClick={() => navigate(ROUTES.CART)}
         />
-        <Menu.Item icon={<UserOutlined />} onClick={showLoginModal} />
+        <Menu.Item icon={<UserOutlined />} onClick={handleLoginClick} />
       </Menu>
 
       <Modal
@@ -300,14 +435,15 @@ const HeaderComponent = () => {
             <label htmlFor="email" className="label">
               Nhập số email để Đăng ký / Đăng nhập tài khoản Khoi Phan Clothes.
             </label>
-            <Input
-              type="email"
+            {/* React Hook Form Controller */}
+            <Controller
+              control={control}
               name="email"
-              id="email"
-              placeholder="Vui lòng nhập địa chỉ email"
-              value={email}
-              onChange={handleEmailInputChange}
+              render={({ field }) => (
+                <Input {...field} placeholder="Vui lòng nhập địa chỉ email" />
+              )}
             />
+            {errors.email && <p className="error">{errors.email.message}</p>}
           </div>
           <div className="span">
             <Button
@@ -333,7 +469,6 @@ const HeaderComponent = () => {
         footer={null}
         className="otp-choice-modal"
       >
-        {/* ...nút chọn Zalo... */}
         <Button type="primary" onClick={handleSendOTP}>
           Gửi mã OTP
         </Button>
@@ -345,13 +480,22 @@ const HeaderComponent = () => {
         footer={null}
         className="otp-input-modal"
       >
-        <Input
-          type="text"
-          maxLength="4"
-          placeholder="Nhập mã xác thực"
-          onChange={handleOTPInputChange}
-          className="otp-input"
-        />
+        {otpError && <div className="otp-error-message">{otpError}</div>}
+        <div className="input-code">
+          {" "}
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Input
+              key={index}
+              maxLength={1}
+              value={otp[index]}
+              autoFocus={index === 0}
+              ref={(el) => (inputsRef.current[index] = el)}
+              type="text"
+              className="otp-input"
+              onChange={(e) => handleOTPInputChange(e, index)}
+            />
+          ))}
+        </div>
       </Modal>
     </>
   );

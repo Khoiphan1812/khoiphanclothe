@@ -1,8 +1,9 @@
 import { Card, Col, Row, Spin } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "./style.scss";
-import { productApis } from "../../apis/productsAPI";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchHotProducts } from "../../redux/features/product/productSlice";
 
 const ProductSection = ({ products }) => (
   <Row gutter={[16, 16]}>
@@ -31,29 +32,23 @@ const ProductSection = ({ products }) => (
 );
 
 const HotProducts = () => {
-  const [hotProducts, setHotProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { hotProducts, isLoading, error } = useSelector(
+    (state) => state.products
+  );
 
   useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const allProducts = await productApis.getAllProducts();
-        const hot = allProducts.filter(
-          (product) => product.tags && product.tags.includes("hot")
-        );
-        setHotProducts(hot);
-      } catch (error) {
-        console.error("Failed to fetch products", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadProducts();
-  }, []);
+    if (hotProducts.length === 0 && !error) {
+      dispatch(fetchHotProducts());
+    }
+  }, [dispatch, hotProducts.length, error]);
 
   if (isLoading) {
     return <Spin size="large" />;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   if (hotProducts.length === 0) {

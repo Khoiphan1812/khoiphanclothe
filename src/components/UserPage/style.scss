@@ -243,3 +243,80 @@ button[type="submit"] {
     background-color: darken(#d9534f, 10%);
   }
 }
+
+// Styles for the order modal
+.order-modal {
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 800px; // Chiều rộng tối đa của modal
+    max-height: 80vh; // Chiều cao tối đa của modal
+
+    .order-items {
+      max-height: 60vh; // Giảm chiều cao tối đa nếu cần
+      overflow-y: auto;
+    }
+
+    .order-item {
+      display: flex;
+      align-items: flex-start; // Align to the top of the item
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ccc; // Optional separator
+      padding-bottom: 10px;
+
+      .item-image {
+        flex-shrink: 0;
+        width: 80px; // Giảm kích thước ảnh
+        margin-right: 10px;
+
+        img {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+      }
+
+      .item-details {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        p {
+          margin: 2px 0; // Giảm khoảng cách giữa các dòng
+          font-size: 12px; // Giảm kích thước font
+        }
+
+        .product-price {
+          color: #d0011b; // Màu sắc nổi bật cho giá
+          font-weight: bold;
+          margin: 5px 0; // Giảm khoảng cách
+        }
+      }
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 8px 16px; // Giảm kích thước button
+      font-size: 14px; // Điều chỉnh font-size nếu cần
+      background-color: #fbb03b;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  }
+}

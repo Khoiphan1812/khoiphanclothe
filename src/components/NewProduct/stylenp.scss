@@ -1,0 +1,117 @@
+.layout {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 15px;
+}
+
+.main-content {
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.product-section {
+  justify-content: center;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 15px;
+
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #333;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem 0;
+    transition: all 0.3s ease;
+  }
+
+  .product-price {
+    color: #333;
+    font-size: 1rem;
+    margin: 1rem 0;
+  }
+
+  .ant-card {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+    overflow: hidden; // Ensure the content doesn't overflow
+
+    .ant-card-cover img {
+      width: 100%;
+      object-fit: cover; // Keep aspect ratio of the image
+    }
+
+    .ant-card-body {
+      padding: 16px; // Adjust padding according to your design
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+
+      .product-actions {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        margin-top: auto; // Push actions to the bottom
+
+        .add-to-cart-btn {
+          flex-basis: 70%;
+        }
+        .buy-now-btn {
+          flex-basis: 28%; // Adjust the width of the buttons to half of the container minus the gap
+          &:hover {
+            opacity: 0.8; // Optional hover effect
+          }
+        }
+      }
+    }
+  }
+}
+
+.header-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 2rem;
+
+  .section-title {
+    flex-grow: 1;
+    text-align: center;
+    margin: 0;
+  }
+
+  .filter-section {
+    padding-right: 20px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+@media (max-width: 1200px) {
+  .product-section .ant-card {
+    .ant-card-body {
+      .product-actions {
+        flex-direction: column;
+        align-items: stretch;
+
+        .add-to-cart-btn,
+        .buy-now-btn {
+          width: auto; // Buttons will take the width of their content
+          margin-bottom: 8px;
+        }
+      }
+    }
+  }
+}

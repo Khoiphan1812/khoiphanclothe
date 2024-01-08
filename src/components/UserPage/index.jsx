@@ -1,33 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./style.scss";
 import axios from "axios";
-import { userApis } from "../../apis/userAPI";
-import { useLocation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchUserDetails,
+  updateUserDetailsAsync,
+} from "../../redux/features/user/userSlice";
+import {
+  resetUserInfo,
+  setUserInfo,
+} from "../../redux/features/auth/authSlice";
+import { orderApis } from "../../apis/orderAPI";
 
 const UserProfile = () => {
-  const { email } = useParams(); // Use email instead of id
-  const location = useLocation();
-  const [userDetails, setUserDetails] = useState(
-    location.state?.user || {
-      email: "",
-      gender: "",
-      fullName: "",
-      phoneNumber: "",
-      dob: "",
-      province: "",
-      district: "",
-      ward: "",
-      streetAddress: "",
-      addressType: "",
-    }
-  );
+  const { email } = useParams();
+  const dispatch = useDispatch();
+  const userDetails = useSelector((state) => state.user.userDetails);
+  const userInfo =
+    useSelector((state) => state.auth.userInfo) ||
+    JSON.parse(localStorage.getItem("userInfo"));
+
+  const navigate = useNavigate();
 
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
+  // eslint-disable-next-line no-unused-vars
+  const [selectedWard, setSelectedWard] = useState("");
+  const [localUserInfo, setLocalUserInfo] = useState(userInfo);
 
   const handleOpenAddressModal = () => {
     setIsAddressModalOpen(true);
@@ -37,19 +42,83 @@ const UserProfile = () => {
     setIsAddressModalOpen(false);
   };
 
+  const handleOpenOrderModal = () => {
+    setIsOrderModalOpen(true);
+  };
+
+  const handleCloseOrderModal = () => {
+    setIsOrderModalOpen(false);
+  };
+
+  const [orderItems, setOrderItems] = useState([]);
   useEffect(() => {
-    const fetchUserDetailsByEmail = async () => {
-      if (!email) return;
-      try {
-        const user = await userApis.getUserByPhone(email);
-        setUserDetails(user || {});
-      } catch (error) {
-        console.error("Error fetching user details:", error);
+    const fetchAndFilterOrders = async () => {
+      if (userInfo?.id) {
+        try {
+          // Fetch all orders
+          const allOrders = await orderApis.getAllOrders();
+
+          // Filter orders where buyerId matches the logged-in user's ID
+          const userOrders = allOrders.filter(
+            (order) => order.buyer.id === userInfo.id
+          );
+
+          // Extract items from the user's orders
+          let allItems = [];
+          userOrders.forEach((order) => {
+            if (order.items && Array.isArray(order.items)) {
+              // Lấy tất cả items và thêm dateOfBill từ đơn hàng
+              let itemsWithDate = order.items.map((item) => ({
+                ...item,
+                dateOfBill: order.dateOfBill,
+              }));
+              allItems = [...allItems, ...itemsWithDate];
+            }
+          });
+
+          // Update state with the filtered items
+          setOrderItems(allItems);
+        } catch (error) {
+          console.error(
+            `Failed to fetch and filter orders for user ${userInfo.id}`,
+            error
+          );
+          setOrderItems([]); // Reset order items in case of error
+        }
       }
     };
 
-    fetchUserDetailsByEmail();
-  }, [email]);
+    fetchAndFilterOrders();
+  }, [userInfo.id]); // Dependency array to re-run effect when userInfo.id changes
+
+  useEffect(() => {
+    if (!userInfo && email) {
+      // Nếu không có userInfo trong store nhưng có email, fetch thông tin người dùng
+      dispatch(fetchUserDetails(email));
+    } else if (!userInfo) {
+      // Nếu không có userInfo trong store và không có email, lấy từ localStorage
+      const userInfoLocal = JSON.parse(localStorage.getItem("userInfo"));
+      if (userInfoLocal) {
+        dispatch(setUserInfo(userInfoLocal));
+      }
+    }
+  }, [email, dispatch, userInfo]);
+
+  useEffect(() => {
+    console.log("User:", userInfo);
+  }, [userInfo]);
+
+  useEffect(() => {
+    if (!!userInfo.province) {
+      setSelectedProvince(userInfo.province);
+    }
+    if (!!userInfo.district) {
+      setSelectedDistrict(userInfo.district);
+    }
+    if (!!userInfo.ward) {
+      setSelectedWard(userInfo.ward);
+    }
+  }, [userInfo.province, userInfo.district, userInfo.ward]);
 
   useEffect(() => {
     axios
@@ -69,6 +138,7 @@ const UserProfile = () => {
         .get(`https://provinces.open-api.vn/api/p/${selectedProvince}?depth=2`)
         .then((response) => {
           setDistricts(response.data.districts);
+          setWards([]);
         })
         .catch((error) => {
           console.error("Error fetching districts:", error);
@@ -90,86 +160,166 @@ const UserProfile = () => {
     }
   }, [selectedDistrict]);
 
+  // Hàm để cập nhật districts và wards
+  const updateDistrictsAndWards = useCallback(async () => {
+    if (selectedProvince) {
+      try {
+        const response = await axios.get(
+          `https://provinces.open-api.vn/api/p/${selectedProvince}?depth=2`
+        );
+        setDistricts(response.data.districts);
+
+        if (selectedDistrict) {
+          const districtResponse = await axios.get(
+            `https://provinces.open-api.vn/api/d/${selectedDistrict}?depth=2`
+          );
+          setWards(districtResponse.data.wards);
+        } else {
+          setWards([]);
+        }
+      } catch (error) {
+        console.error("Error fetching districts or wards:", error);
+      }
+    }
+  }, [selectedProvince, selectedDistrict]);
+
+  useEffect(() => {
+    if (isAddressModalOpen || selectedProvince || selectedDistrict) {
+      updateDistrictsAndWards();
+    }
+  }, [
+    isAddressModalOpen,
+    selectedProvince,
+    selectedDistrict,
+    updateDistrictsAndWards,
+  ]);
+
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
-    setUserDetails((prevState) => ({
-      ...prevState,
-      [name]: type === "radio" ? (checked ? value : prevState[name]) : value,
-    }));
+
+    // Tạo một bản sao mới của userInfo với thông tin cập nhật
+    const updatedUserInfo = {
+      ...userInfo,
+      [name]: type === "checkbox" ? checked : value,
+    };
+    // Cập nhật state cục bộ
+    setLocalUserInfo(updatedUserInfo);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Gửi toàn bộ thông tin người dùng để cập nhật
-      const updatedUser = await userApis.updateUserById(
-        userDetails.id,
-        userDetails
-      );
-      console.log("Thông tin đã được cập nhật:", updatedUser);
-      setUserDetails(updatedUser); // Cập nhật state với thông tin mới
-      handleCloseAddressModal(); // Đóng modal nếu cần
+      console.log(localUserInfo, "localUserInfo");
+      await dispatch(updateUserDetailsAsync(localUserInfo)).unwrap();
+      handleCloseAddressModal();
     } catch (error) {
-      console.error("Lỗi khi cập nhật thông tin người dùng:", error);
+      // handle error
+      console.error("Update failed:", error);
     }
   };
 
   // Assuming you have a function to handle logout
   const handleLogout = () => {
-    console.log("User logged out");
-    // Implement logout functionality
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("key_carts_list");
+    dispatch(resetUserInfo());
+    navigate("/");
   };
 
   // Handle change for province dropdown
   const handleProvinceChange = (event) => {
     const provinceCode = event.target.value;
     setSelectedProvince(provinceCode);
-    setDistricts([]);
+    setSelectedDistrict("");
     setWards([]);
-    // Cập nhật state userDetails
-    setUserDetails((prevState) => ({
-      ...prevState,
+
+    // Cập nhật local state
+    setLocalUserInfo({
+      ...localUserInfo,
       province: provinceCode,
       district: "",
       ward: "",
-    }));
+    });
+
+    // Cập nhật userInfo trong Redux store và đồng bộ với backend
+    dispatch(
+      updateUserDetailsAsync({
+        ...userInfo,
+        province: provinceCode,
+        district: "",
+        ward: "",
+      })
+    );
   };
 
-  const handleDistrictChange = async (event) => {
+  const handleDistrictChange = (event) => {
     const districtCode = event.target.value;
     setSelectedDistrict(districtCode);
-    // Cập nhật state userDetails
-    setUserDetails((prevState) => ({
-      ...prevState,
+    setWards([]);
+
+    // Cập nhật local state
+    setLocalUserInfo({
+      ...localUserInfo,
       district: districtCode,
       ward: "",
-    }));
-    // Fetch wards
-    try {
-      const response = await axios.get(
-        `https://provinces.open-api.vn/api/d/${districtCode}?depth=2`
-      );
-      setWards(response.data.wards);
-    } catch (error) {
-      console.error("Error fetching wards:", error);
-    }
+    });
+
+    // Cập nhật userInfo trong Redux store và đồng bộ với backend
+    dispatch(
+      updateUserDetailsAsync({
+        ...userInfo,
+        district: districtCode,
+        ward: "",
+      })
+    );
   };
+
+  // Đảm bảo hàm này cũng được gọi khi chọn xã/phường
+  // Cập nhật trong handleWardChange
+  const handleWardChange = (event) => {
+    const wardCode = event.target.value;
+    setSelectedWard(wardCode);
+
+    // Cập nhật local state
+    setLocalUserInfo({
+      ...localUserInfo,
+      ward: wardCode,
+    });
+
+    // Cập nhật userInfo trong Redux store và đồng bộ với backend
+    dispatch(
+      updateUserDetailsAsync({
+        ...userInfo,
+        ward: wardCode,
+      })
+    );
+  };
+
+  useEffect(() => {
+    // Hàm này sẽ được gọi mỗi khi selectedProvince hoặc selectedDistrict thay đổi
+    updateDistrictsAndWards();
+  }, [selectedProvince, selectedDistrict, updateDistrictsAndWards]);
+
+  if (!userDetails || !userInfo) {
+    // Render một thông báo loading hoặc trả về null
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="user-profile-container">
       <aside className="sidebar">
         <div className="user-avatar">
-          {userDetails.fullName ? userDetails.fullName.charAt(0) : ""}
+          {userInfo.fullName ? userInfo.fullName.charAt(0) : ""}
         </div>
         <div className="user-details-sidebar">
-          <div className="user-name">{userDetails.fullName}</div>
+          <div className="user-name">{userInfo.fullName}</div>
           {/* Other user details */}
         </div>
         <nav className="user-actions">
           {/* Add onClick handlers to these list items as needed */}
           <ul>
             <li>Mã ưu đãi</li>
-            <li>Đơn hàng</li>
+            <li onClick={handleOpenOrderModal}>Đơn hàng</li>
             <li>Thẻ thành viên</li>
             <li onClick={handleOpenAddressModal}>Sổ địa chỉ</li>
             <li>Yêu thích</li>
@@ -189,35 +339,28 @@ const UserProfile = () => {
                 type="radio"
                 name="gender"
                 value="male"
-                checked={userDetails.gender === "male"}
+                checked={localUserInfo.gender === "male"}
                 onChange={handleInputChange}
-              />{" "}
+              />
               Nam
               <input
                 type="radio"
                 name="gender"
                 value="female"
-                checked={userDetails.gender === "female"}
-                onChange={(e) =>
-                  setUserDetails({ ...userDetails, gender: e.target.value })
-                }
+                checked={localUserInfo.gender === "female"}
+                onChange={handleInputChange}
               />{" "}
               Nữ
               <input
                 type="radio"
                 name="gender"
                 value="other"
-                checked={userDetails.gender === "other"}
-                onChange={(e) =>
-                  setUserDetails({ ...userDetails, gender: e.target.value })
-                }
+                checked={localUserInfo.gender === "other"}
+                onChange={handleInputChange}
               />{" "}
               Khác
             </div>
           </div>
-
-          {/* Repeat similar blocks for full name, phone number, email, and DOB */}
-          {/* For example: */}
           <div className="form-group">
             <label htmlFor="fullName">Họ tên</label>
             <input
@@ -225,7 +368,7 @@ const UserProfile = () => {
               id="fullName"
               name="fullName"
               placeholder="Nhập họ và tên"
-              value={userDetails.fullName}
+              value={localUserInfo.fullName}
               onChange={handleInputChange}
             />
           </div>
@@ -235,8 +378,8 @@ const UserProfile = () => {
             <input
               type="tel"
               id="phoneNumber"
-              name="v"
-              value={userDetails.phoneNumber}
+              name="phoneNumber"
+              value={localUserInfo.phoneNumber}
               onChange={handleInputChange}
             />
           </div>
@@ -247,7 +390,7 @@ const UserProfile = () => {
               id="email"
               name="email"
               placeholder="Nhập email"
-              value={userDetails.email}
+              value={localUserInfo.email}
               onChange={handleInputChange}
             />
           </div>
@@ -258,7 +401,7 @@ const UserProfile = () => {
               type="date"
               id="dob"
               name="dob"
-              value={userDetails.dob || ""}
+              value={localUserInfo.dob || ""}
               onChange={handleInputChange}
             />
           </div>
@@ -287,7 +430,7 @@ const UserProfile = () => {
                 id="fullName"
                 name="fullName"
                 placeholder="Nhập họ và tên"
-                value={userDetails.fullName} // Sử dụng giá trị từ state
+                value={localUserInfo.fullName} // Sử dụng giá trị từ state
                 onChange={handleInputChange} // Cập nhật state khi có thay đổi
               />
 
@@ -297,7 +440,7 @@ const UserProfile = () => {
                 id="phoneNumber"
                 name="phoneNumber"
                 placeholder="Nhập số điện thoại"
-                value={userDetails.phoneNumber}
+                value={localUserInfo.phoneNumber}
                 onChange={handleInputChange}
               />
 
@@ -305,11 +448,8 @@ const UserProfile = () => {
               <select
                 id="province"
                 name="province"
-                value={userDetails.province}
-                onChange={(e) => {
-                  handleProvinceChange(e);
-                  handleInputChange(e);
-                }}
+                value={localUserInfo.province}
+                onChange={handleProvinceChange}
               >
                 {provinces.map((province) => (
                   <option key={province.code} value={province.code}>
@@ -322,11 +462,8 @@ const UserProfile = () => {
               <select
                 id="district"
                 name="district"
-                value={userDetails.district}
-                onChange={(e) => {
-                  handleDistrictChange(e);
-                  handleInputChange(e);
-                }}
+                value={localUserInfo.district}
+                onChange={handleDistrictChange}
               >
                 {districts.map((district) => (
                   <option key={district.code} value={district.code}>
@@ -339,8 +476,8 @@ const UserProfile = () => {
               <select
                 id="ward"
                 name="ward"
-                value={userDetails.ward}
-                onChange={handleInputChange}
+                value={localUserInfo.ward}
+                onChange={handleWardChange}
               >
                 {wards.map((ward) => (
                   <option key={ward.code} value={ward.code}>
@@ -353,7 +490,7 @@ const UserProfile = () => {
                 type="text"
                 id="streetAddress"
                 name="streetAddress"
-                value={userDetails.streetAddress}
+                value={localUserInfo.streetAddress}
                 placeholder="Toà nhà, số nhà, tên đường"
                 onChange={handleInputChange}
               />
@@ -364,7 +501,7 @@ const UserProfile = () => {
                     type="radio"
                     name="addressType"
                     value="company"
-                    checked={userDetails.addressType === "company"}
+                    checked={localUserInfo.addressType === "company"}
                     onChange={handleInputChange}
                   />{" "}
                   Công ty
@@ -374,7 +511,7 @@ const UserProfile = () => {
                     type="radio"
                     name="addressType"
                     value="home"
-                    checked={userDetails.addressType === "home"}
+                    checked={localUserInfo.addressType === "home"}
                     onChange={handleInputChange}
                   />{" "}
                   Nhà riêng
@@ -390,6 +527,32 @@ const UserProfile = () => {
 
               <button type="submit">Lưu địa chỉ</button>
             </form>
+          </div>
+        </div>
+      )}
+      {isOrderModalOpen && (
+        <div className="order-modal">
+          <div className="modal-backdrop" onClick={handleCloseOrderModal}>
+            <div className="modal" onClick={(e) => e.stopPropagation()}>
+              <h2>Đơn hàng của bạn</h2>
+              <div className="order-items">
+                {orderItems.map((items, index) => (
+                  <div key={items.id || index} className="order-item">
+                    <div className="item-image">
+                      <img src={items.image} alt={items.title} />
+                    </div>
+                    <div className="item-details">
+                      <p>{items.title}</p>
+                      <p>Giá: {items.price}</p>
+                      <p>Size: {items.size}</p>
+                      <p>Số lượng: {items.quantity}</p>
+                      <p>Ngày mua: {items.dateOfBill}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <button onClick={handleCloseOrderModal}>Đóng</button>
+            </div>
           </div>
         </div>
       )}
